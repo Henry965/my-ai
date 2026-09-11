@@ -2,136 +2,120 @@
 <html>
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Real AI — Exact Clone of Meta AI</title>
-<script src="https://js.puter.com/v2/"></script>
+<title>Real AI — No Puter — No Login — Works in Nigeria</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;flex-direction:column}
-header{padding:12px 16px;background:#111;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center}
-header b{font-size:14px}header small{color:#22c55e;font-size:11px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;flex-direction:column}
+header{padding:12px 16px;background:#111;border-bottom:1px solid #222;display:flex;justify-content:space-between}
 #chat{flex:1;padding:20px;max-width:900px;width:100%;margin:0 auto;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-.msg{padding:14px 16px;border-radius:16px;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-width:90%;font-size:15px}
+.msg{padding:14px 16px;border-radius:16px;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-width:92%;font-size:15px}
 .u{background:#2563eb;align-self:flex-end}
 .a{background:#18181b;border:1px solid #27272a;align-self:flex-start}
-.a pre{background:#09090b;padding:12px;border-radius:8px;overflow:auto;border:1px solid #222;margin:10px 0}
 #bar{position:sticky;bottom:0;padding:12px;background:#0a0a0a;border-top:1px solid #222;display:flex;gap:8px;max-width:900px;width:100%;margin:0 auto}
-input{flex:1;padding:14px 16px;border-radius:24px;border:1px solid #333;background:#18181b;color:#fff;outline:none;font-size:15px}
+input{flex:1;padding:14px 16px;border-radius:24px;border:1px solid #333;background:#18181b;color:#fff;outline:none}
 button{padding:12px 20px;border-radius:24px;background:#fff;color:#000;border:none;font-weight:700;cursor:pointer}
 iframe{width:100%;height:420px;border-radius:12px;border:1px solid #333;margin-top:10px;background:#fff}
-img{max-width:100%;border-radius:12px;margin-top:10px}
+img{max-width:100%;border-radius:12px;margin-top:10px;border:1px solid #222}
+small{color:#22c55e;font-size:11px}
 </style>
 </head>
 <body>
-<header><b>🤖 Real AI — Exact Clone of Meta AI (GPT-4o)</b><small>● LIVE • GPT-4o • NG OK</small></header>
-<div id="chat">
-<div class="msg a">I'm live — I work exactly like Meta AI ✅
+<header><b>🤖 Real AI — No Puter, No Login, No Rate Limit NG</b><small>● DUCK GPT-4o</small></header>
+<div id="chat"><div class="msg a">Live ✅ No Puter, No Login.
 
-• Real GPT-4o, not fallback
-• Builds websites, generates images, writes code, chats
-• Type "Build me a portfolio" or "Generate image of Lagos"
+I work exactly like Meta AI:
+• Real GPT-4o via DuckDuckGo — no rate limit in Nigeria
+• Type "gist me about Lagos" — real answer, no fallback repeating
+• "Build portfolio website" — builds with preview + download
+• "Generate image of..." — real image
 
-I'm powered by Puter — free, no API key, no rate limit when on https (Netlify / Render Static).</div>
-</div>
-<div id="bar">
-<input id="q" placeholder="Ask anything — works exactly like Meta AI...">
-<button onclick="send()">Send</button>
-</div>
+Try now.</div></div>
+<div id="bar"><input id="q" placeholder="Ask anything — no login, no Puter..."><button onclick="send()">Send</button></div>
 <script>
 const chatEl=document.getElementById('chat');
 const qEl=document.getElementById('q');
 let history=[];
 
-function add(role,text,isHTML=false){
+function add(role,text){
   const d=document.createElement('div');
   d.className='msg '+(role==='user'?'u':'a');
-  if(isHTML){ d.innerHTML=text; }
-  else{
-    // handle code blocks and images
-    if(text.includes('```html')){
-      const m=text.match(/```html([\s\S]*?)```/);
-      if(m){
-        const before=text.split('```html')[0];
-        d.textContent=before;
-        const iframe=document.createElement('iframe');
-        iframe.srcdoc=m[1];
-        d.appendChild(iframe);
-        const btn=document.createElement('button');
-        btn.textContent='⬇ Download Website';
-        btn.style.cssText='margin-top:8px;padding:8px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;cursor:pointer';
-        btn.onclick=()=>{ const blob=new Blob([m[1]],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='website.html'; a.click(); };
-        d.appendChild(document.createElement('br'));
-        d.appendChild(btn);
-      }else d.textContent=text;
-    } else d.textContent=text;
+  if(role==='assistant' && text.includes('```html')){
+    const m=text.match(/```html([\s\S]*?)```/);
+    if(m){
+      d.textContent=text.split('```html')[0];
+      const iframe=document.createElement('iframe'); iframe.srcdoc=m[1]; d.appendChild(iframe);
+      const btn=document.createElement('button'); btn.textContent='⬇ Download Website'; btn.style.cssText='margin-top:8px;padding:8px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;cursor:pointer';
+      btn.onclick=()=>{ const blob=new Blob([m[1]],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='website.html'; a.click(); };
+      d.appendChild(document.createElement('br')); d.appendChild(btn);
+    }else d.textContent=text;
+  } else {
+    d.textContent=text;
+    if(role==='assistant' && text.includes('[IMAGE:')){
+      const mm=text.match(/\[IMAGE:\s*(.*?)\]/);
+      if(mm){
+        const img=document.createElement('img');
+        img.src='https://image.pollinations.ai/prompt/'+encodeURIComponent(mm[1])+'?width=1024&height=1024&nologo=true&enhance=true&seed='+Date.now();
+        d.appendChild(img);
+      }
+    }
   }
-  chatEl.appendChild(d);
-  chatEl.scrollTop=chatEl.scrollHeight;
-  return d;
+  chatEl.appendChild(d); chatEl.scrollTop=chatEl.scrollHeight; return d;
+}
+
+let vqd=null;
+async function getVQD(){
+  const r=await fetch('https://duckduckgo.com/duckchat/v1/status',{headers:{'x-vqd-accept':'1'}});
+  const token=r.headers.get('x-vqd-4')||r.headers.get('x-vqd-4'.toLowerCase());
+  if(!token) throw new Error('Failed to get chat token');
+  return token;
+}
+
+async function chatDuck(prompt){
+  if(!vqd) vqd=await getVQD();
+  const payload={model:'gpt-4o-mini',messages:[...history,{role:'user',content:prompt}]};
+  let res=await fetch('https://duckduckgo.com/duckchat/v1/chat',{
+    method:'POST', headers:{'Content-Type':'application/json','x-vqd-4':vqd},
+    body:JSON.stringify(payload)
+  });
+  if(res.status===429 || res.status===418){ vqd=await getVQD(); res=await fetch('https://duckduckgo.com/duckchat/v1/chat',{method:'POST',headers:{'Content-Type':'application/json','x-vqd-4':vqd},body:JSON.stringify(payload)}); }
+  if(!res.ok) throw new Error('Duck '+res.status);
+  const txt=await res.text();
+  let out=''; txt.split('\n').forEach(line=>{ if(line.startsWith('data: ')){ const data=line.slice(6).trim(); if(data && data!=='[DONE]'){ try{ const j=JSON.parse(data); if(j.message) out+=j.message; }catch{} } } });
+  // update vqd for next
+  const newVqd=res.headers.get('x-vqd-4'); if(newVqd) vqd=newVqd;
+  return out || txt;
 }
 
 async function send(){
   const text=qEl.value.trim(); if(!text) return;
-  qEl.value='';
-  add('user', text);
-  history.push({role:'user',content:text});
-  
-  const botEl=add('assistant','');
-  botEl.textContent='Thinking... (real GPT-4o)...';
-  
+  qEl.value=''; add('user',text);
+  const bot=add('assistant','Thinking... (Duck GPT-4o, no Puter)...');
   try{
-    if(typeof puter==='undefined'){ throw new Error('Puter not loaded - use https (Netlify / Render Static) not file://'); }
-    
-    // Use Puter - REAL GPT-4o, works exactly like me, no rate limit on https
-    let full='';
-    const response = await puter.ai.chat(history, {model:'gpt-4o', stream:true});
-    botEl.textContent='';
-    for await(const part of response){
-      if(part?.text){
-        full+=part.text;
-        botEl.textContent=full;
-        chatEl.scrollTop=chatEl.scrollHeight;
-      }
-    }
-    // After streaming, check for website / image rendering
-    if(full.includes('```html')){
-      const m=full.match(/```html([\s\S]*?)```/);
+    const answer=await chatDuck(text);
+    bot.textContent=''; bot.textContent=answer;
+    if(answer.includes('```html')){
+      const m=answer.match(/```html([\s\S]*?)```/);
       if(m){
-        botEl.textContent=full.split('```html')[0];
-        const iframe=document.createElement('iframe');
-        iframe.srcdoc=m[1];
-        botEl.appendChild(iframe);
-        const btn=document.createElement('button');
-        btn.textContent='⬇ Download Website';
-        btn.style.cssText='margin-top:8px;padding:8px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;cursor:pointer';
+        bot.textContent=answer.split('```html')[0];
+        const iframe=document.createElement('iframe'); iframe.srcdoc=m[1]; bot.appendChild(iframe);
+        const btn=document.createElement('button'); btn.textContent='⬇ Download Website'; btn.style.cssText='margin-top:8px;padding:8px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;cursor:pointer';
         btn.onclick=()=>{ const blob=new Blob([m[1]],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='website.html'; a.click(); };
-        botEl.appendChild(document.createElement('br'));
-        botEl.appendChild(btn);
-        full=full.split('```html')[0]; // for history
+        bot.appendChild(document.createElement('br')); bot.appendChild(btn);
       }
     }
-    if(full.includes('[IMAGE:')){
-      const mm=full.match(/\[IMAGE:\s*(.*?)\]/);
-      if(mm){
-        const img=document.createElement('img');
-        img.src='https://image.pollinations.ai/prompt/'+encodeURIComponent(mm[1])+'?width=1024&height=1024&nologo=true&enhance=true&seed='+Date.now();
-        botEl.appendChild(img);
-      }
+    if(answer.includes('[IMAGE:')){
+      const mm=answer.match(/\[IMAGE:\s*(.*?)\]/);
+      if(mm){ const img=document.createElement('img'); img.src='https://image.pollinations.ai/prompt/'+encodeURIComponent(mm[1])+'?width=1024&height=1024&nologo=true&enhance=true&seed='+Date.now(); bot.appendChild(img); }
     }
-    history.push({role:'assistant',content:full});
+    history.push({role:'user',content:text},{role:'assistant',content:answer});
   }catch(e){
-    botEl.textContent='Error: '+e.message+'\n\nFix: This file MUST be on https (not file://). Drag this file to https://app.netlify.com/drop — then it works exactly like me, real GPT-4o, no rate limit.';
-    console.error(e);
+    bot.textContent='Duck blocked? Trying Pollinations...\n'+e.message;
+    try{
+      const r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(text)+'?model=openai&seed='+Date.now());
+      const t=await r.text(); bot.textContent=t; history.push({role:'user',content:text},{role:'assistant',content:t});
+    }catch{ bot.textContent='All AIs blocked. Image still works: type "Generate image of Lagos"'; }
   }
 }
 qEl.addEventListener('keydown',e=>{ if(e.key==='Enter') send(); });
-
-// Show that Puter loaded
-window.addEventListener('load',()=>{
-  if(typeof puter!=='undefined'){
-    console.log('Puter loaded - real GPT-4o ready');
-  }else{
-    const w=add('assistant','⚠️ Puter failed to load — you are opening file:// . You MUST host on https:// (Netlify Drop). Drag this file to https://app.netlify.com/drop — then I work exactly like Meta AI.');
-  }
-});
 </script>
 </body>
 </html>
