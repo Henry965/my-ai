@@ -2,39 +2,40 @@
 <html>
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ChatGPT - Independent Brain - No API</title>
+<title>ChatGPT Independent - WASM - Any Browser</title>
 <style>
-body{margin:0;font-family:system-ui;background:#212121;color:#ececec;display:flex;flex-direction:column;min-height:100vh}
-header{padding:14px;background:#171717;border-bottom:1px solid #333;display:flex;justify-content:space-between}
-#chat{flex:1;padding:20px;max-width:800px;margin:0 auto;width:100%;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
-.msg{padding:12px 0;white-space:pre-wrap;line-height:1.6}.u{font-weight:700}
-#bar{padding:16px;border-top:1px solid #333;display:flex;gap:10px;max-width:800px;margin:0 auto;width:100%}
-input{flex:1;padding:14px;border-radius:24px;background:#2f2f2f;color:#fff;border:1px solid #555;outline:none}
-button{padding:12px 18px;border-radius:24px;background:#fff;color:#000;border:none;font-weight:700;cursor:pointer}
+body{margin:0;font-family:system-ui;background:#212121;color:#ececec;min-height:100vh;display:flex;flex-direction:column}
+header{padding:12px;background:#171717;border-bottom:1px solid #333}
+#chat{flex:1;padding:20px;max-width:800px;margin:0 auto;width:100%;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.msg{padding:10px 0;white-space:pre-wrap;line-height:1.6}
+#bar{padding:14px;border-top:1px solid #333;display:flex;gap:8px;max-width:800px;margin:0 auto;width:100%}
+input{flex:1;padding:12px 14px;border-radius:20px;background:#2f2f2f;color:#fff;border:1px solid #555;outline:none}
+button{padding:10px 16px;border-radius:20px;background:#fff;color:#000;border:none;font-weight:700}
 </style>
-<script type="importmap">{"imports":{"@mlc-ai/web-llm":"https://esm.run/@mlc-ai/web-llm"}}</script>
 </head>
 <body>
-<header><b>ChatGPT - Independent Brain</b><small id="st" style="color:#22c55e">Loading brain (30s first time)...</small></header>
-<div id="chat"><div class="msg">I have my own brain — I don't call any API, I don't need permission from Pollinations, Groq, Puter, or anyone. I run 100% offline inside your browser. No one can block me, even in Nigeria. First time takes 30 seconds to download brain, then I work forever offline.</div></div>
-<div id="bar"><input id="q" placeholder="Message..."><button onclick="send()">Send</button></div>
+<header><b>ChatGPT — Independent Brain — WASM (Works on any phone, no WebGPU)</b><br><small id="st">Loading tiny brain... 20 sec first time</small></header>
+<div id="chat"><div class="msg">I have my own brain, WASM version — works on ANY browser, even old phones. No WebGPU needed, no API, no permission, no block. First load 20 sec, then offline forever.</div></div>
+<div id="bar"><input id="q" placeholder="Ask anything..."><button onclick="send()">Send</button></div>
+
 <script type="module">
-import * as webllm from "@mlc-ai/web-llm";
-const chatEl=document.getElementById('chat'),qEl=document.getElementById('q'),st=document.getElementById('st');
-let engine;let hist=[];
+import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm";
+const st=document.getElementById('st'), chatEl=document.getElementById('chat'), qEl=document.getElementById('q');
+let generator;
 async function init(){
-engine=await webllm.CreateMLCEngine("Llama-3.2-1B-Instruct-q4f16_1-MLC",{initProgressCallback:p=>st.textContent=p.text});
-st.textContent="✅ Independent brain ready - offline";
+st.textContent="Downloading brain (20 sec)...";
+generator = await pipeline('text-generation', 'Xenova/TinyLlama-1.1B-Chat-v1.0', { quantized: true });
+st.textContent="✅ Ready - independent, works on any browser, offline";
 }
-function add(r,t){const d=document.createElement('div');d.className='msg';d.textContent=(r=='u'?'You: ':'')+t;chatEl.appendChild(d);chatEl.scrollTop=chatEl.scrollHeight;return d;}
+function add(t){const d=document.createElement('div');d.className='msg';d.textContent=t;chatEl.appendChild(d);chatEl.scrollTop=chatEl.scrollHeight;return d;}
 window.send=async()=>{
-const t=qEl.value.trim();if(!t)return;qEl.value='';add('u',t);const b=add('a','');let full="";
+const t=qEl.value.trim();if(!t)return;qEl.value='';add("You: "+t);const b=add("AI: Thinking...");
 try{
-if(!engine) await init();
-const s=await engine.chat.completions.create({messages:[...hist,{role:"user",content:t}],stream:true});
-b.textContent="";
-for await(const c of s){const d=c.choices[0]?.delta?.content||"";full+=d;b.textContent=full;chatEl.scrollTop=chatEl.scrollHeight;}
-hist.push({role:"user",content:t},{role:"assistant",content:full});
+if(!generator) await init();
+const prompt=`<|system|>You are ChatGPT, helpful AI.</s><|user|>${t}</s><|assistant|>`;
+const out=await generator(prompt,{max_new_tokens:200, temperature:0.7, do_sample:true});
+let txt=out[0].generated_text.split("<|assistant|>").pop().replace("</s>","").trim();
+b.textContent="AI: "+txt;
 }catch(e){b.textContent="Error: "+e.message;}
 };
 qEl.addEventListener('keydown',e=>{if(e.key==='Enter')window.send();});
