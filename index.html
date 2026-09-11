@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Real AI — No Puter — No Login — Works in Nigeria</title>
+<title>Real AI — No Puter — No Login</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;flex-direction:column}
 header{padding:12px 16px;background:#111;border-bottom:1px solid #222;display:flex;justify-content:space-between}
@@ -15,107 +15,18 @@ input{flex:1;padding:14px 16px;border-radius:24px;border:1px solid #333;backgrou
 button{padding:12px 20px;border-radius:24px;background:#fff;color:#000;border:none;font-weight:700;cursor:pointer}
 iframe{width:100%;height:420px;border-radius:12px;border:1px solid #333;margin-top:10px;background:#fff}
 img{max-width:100%;border-radius:12px;margin-top:10px;border:1px solid #222}
-small{color:#22c55e;font-size:11px}
 </style>
 </head>
 <body>
-<header><b>🤖 Real AI — No Puter, No Login, No Rate Limit NG</b><small>● DUCK GPT-4o</small></header>
-<div id="chat"><div class="msg a">Live ✅ No Puter, No Login.
-
-I work exactly like Meta AI:
-• Real GPT-4o via DuckDuckGo — no rate limit in Nigeria
-• Type "gist me about Lagos" — real answer, no fallback repeating
-• "Build portfolio website" — builds with preview + download
-• "Generate image of..." — real image
-
-Try now.</div></div>
-<div id="bar"><input id="q" placeholder="Ask anything — no login, no Puter..."><button onclick="send()">Send</button></div>
+<header><b>🤖 Real AI — No Puter, No Login</b><small style="color:#22c55e">● GPT-4o</small></header>
+<div id="chat"><div class="msg a">Live ✅ No Puter, No Login. Real GPT-4o via Hack Club. Try "gist me", "build portfolio", "generate image of Lagos"</div></div>
+<div id="bar"><input id="q" placeholder="Ask anything..."><button onclick="send()">Send</button></div>
 <script>
-const chatEl=document.getElementById('chat');
-const qEl=document.getElementById('q');
-let history=[];
-
-function add(role,text){
-  const d=document.createElement('div');
-  d.className='msg '+(role==='user'?'u':'a');
-  if(role==='assistant' && text.includes('```html')){
-    const m=text.match(/```html([\s\S]*?)```/);
-    if(m){
-      d.textContent=text.split('```html')[0];
-      const iframe=document.createElement('iframe'); iframe.srcdoc=m[1]; d.appendChild(iframe);
-      const btn=document.createElement('button'); btn.textContent='⬇ Download Website'; btn.style.cssText='margin-top:8px;padding:8px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;cursor:pointer';
-      btn.onclick=()=>{ const blob=new Blob([m[1]],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='website.html'; a.click(); };
-      d.appendChild(document.createElement('br')); d.appendChild(btn);
-    }else d.textContent=text;
-  } else {
-    d.textContent=text;
-    if(role==='assistant' && text.includes('[IMAGE:')){
-      const mm=text.match(/\[IMAGE:\s*(.*?)\]/);
-      if(mm){
-        const img=document.createElement('img');
-        img.src='https://image.pollinations.ai/prompt/'+encodeURIComponent(mm[1])+'?width=1024&height=1024&nologo=true&enhance=true&seed='+Date.now();
-        d.appendChild(img);
-      }
-    }
-  }
-  chatEl.appendChild(d); chatEl.scrollTop=chatEl.scrollHeight; return d;
-}
-
-let vqd=null;
-async function getVQD(){
-  const r=await fetch('https://duckduckgo.com/duckchat/v1/status',{headers:{'x-vqd-accept':'1'}});
-  const token=r.headers.get('x-vqd-4')||r.headers.get('x-vqd-4'.toLowerCase());
-  if(!token) throw new Error('Failed to get chat token');
-  return token;
-}
-
-async function chatDuck(prompt){
-  if(!vqd) vqd=await getVQD();
-  const payload={model:'gpt-4o-mini',messages:[...history,{role:'user',content:prompt}]};
-  let res=await fetch('https://duckduckgo.com/duckchat/v1/chat',{
-    method:'POST', headers:{'Content-Type':'application/json','x-vqd-4':vqd},
-    body:JSON.stringify(payload)
-  });
-  if(res.status===429 || res.status===418){ vqd=await getVQD(); res=await fetch('https://duckduckgo.com/duckchat/v1/chat',{method:'POST',headers:{'Content-Type':'application/json','x-vqd-4':vqd},body:JSON.stringify(payload)}); }
-  if(!res.ok) throw new Error('Duck '+res.status);
-  const txt=await res.text();
-  let out=''; txt.split('\n').forEach(line=>{ if(line.startsWith('data: ')){ const data=line.slice(6).trim(); if(data && data!=='[DONE]'){ try{ const j=JSON.parse(data); if(j.message) out+=j.message; }catch{} } } });
-  // update vqd for next
-  const newVqd=res.headers.get('x-vqd-4'); if(newVqd) vqd=newVqd;
-  return out || txt;
-}
-
-async function send(){
-  const text=qEl.value.trim(); if(!text) return;
-  qEl.value=''; add('user',text);
-  const bot=add('assistant','Thinking... (Duck GPT-4o, no Puter)...');
-  try{
-    const answer=await chatDuck(text);
-    bot.textContent=''; bot.textContent=answer;
-    if(answer.includes('```html')){
-      const m=answer.match(/```html([\s\S]*?)```/);
-      if(m){
-        bot.textContent=answer.split('```html')[0];
-        const iframe=document.createElement('iframe'); iframe.srcdoc=m[1]; bot.appendChild(iframe);
-        const btn=document.createElement('button'); btn.textContent='⬇ Download Website'; btn.style.cssText='margin-top:8px;padding:8px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;cursor:pointer';
-        btn.onclick=()=>{ const blob=new Blob([m[1]],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='website.html'; a.click(); };
-        bot.appendChild(document.createElement('br')); bot.appendChild(btn);
-      }
-    }
-    if(answer.includes('[IMAGE:')){
-      const mm=answer.match(/\[IMAGE:\s*(.*?)\]/);
-      if(mm){ const img=document.createElement('img'); img.src='https://image.pollinations.ai/prompt/'+encodeURIComponent(mm[1])+'?width=1024&height=1024&nologo=true&enhance=true&seed='+Date.now(); bot.appendChild(img); }
-    }
-    history.push({role:'user',content:text},{role:'assistant',content:answer});
-  }catch(e){
-    bot.textContent='Duck blocked? Trying Pollinations...\n'+e.message;
-    try{
-      const r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(text)+'?model=openai&seed='+Date.now());
-      const t=await r.text(); bot.textContent=t; history.push({role:'user',content:text},{role:'assistant',content:t});
-    }catch{ bot.textContent='All AIs blocked. Image still works: type "Generate image of Lagos"'; }
-  }
-}
-qEl.addEventListener('keydown',e=>{ if(e.key==='Enter') send(); });
+const chatEl=document.getElementById('chat');const qEl=document.getElementById('q');let history=[];
+function add(r,t){const d=document.createElement('div');d.className='msg '+(r==='user'?'u':'a');if(r==='assistant'&&t.includes('```html')){const m=t.match(/```html([\s\S]*?)```/);if(m){d.textContent=t.split('```html')[0];const f=document.createElement('iframe');f.srcdoc=m[1];d.appendChild(f);const b=document.createElement('button');b.textContent='⬇ Download';b.style.cssText='margin-top:8px;padding:8px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;cursor:pointer';b.onclick=()=>{const blob=new Blob([m[1]],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='website.html';a.click();};d.appendChild(document.createElement('br'));d.appendChild(b);}else d.textContent=t;}else{d.textContent=t;if(r==='assistant'&&t.includes('[IMAGE:')){const mm=t.match(/\[IMAGE:\s*(.*?)\]/);if(mm){const img=document.createElement('img');img.src='https://image.pollinations.ai/prompt/'+encodeURIComponent(mm[1])+'?width=1024&height=1024&nologo=true&seed='+Math.floor(Math.random()*1000000);d.appendChild(img);}}}chatEl.appendChild(d);chatEl.scrollTop=chatEl.scrollHeight;return d;}
+async function chatAI(p){const res=await fetch('https://ai.hackclub.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai/gpt-4o-mini',messages:[...history,{role:'user',content:p}],stream:false})});if(!res.ok)throw new Error('AI '+res.status);const data=await res.json();return data.choices?.[0]?.message?.content||'';}
+async function send(){const t=qEl.value.trim();if(!t)return;qEl.value='';add('user',t);const b=add('assistant','Thinking...');try{let a=await chatAI(t);b.textContent='';b.textContent=a;if(a.includes('```html')){const m=a.match(/```html([\s\S]*?)```/);if(m){b.textContent=a.split('```html')[0];const f=document.createElement('iframe');f.srcdoc=m[1];b.appendChild(f);}}if(a.includes('[IMAGE:')){const mm=a.match(/\[IMAGE:\s*(.*?)\]/);if(mm){const img=document.createElement('img');img.src='https://image.pollinations.ai/prompt/'+encodeURIComponent(mm[1])+'?width=1024&height=1024&nologo=true&seed='+Math.floor(Math.random()*1000000);b.appendChild(img);}}history.push({role:'user',content:t},{role:'assistant',content:a});}catch(e){b.textContent='Error: '+e.message;}}
+qEl.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
 </script>
 </body>
 </html>
