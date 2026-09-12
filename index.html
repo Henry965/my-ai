@@ -2,37 +2,39 @@
 <html>
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ChatGPT Fast - Independent</title>
+<title>ChatGPT Fast - Fixed</title>
 <style>
 body{margin:0;font-family:system-ui;background:#212121;color:#ececec;min-height:100vh;display:flex;flex-direction:column}
 header{padding:12px;background:#171717;border-bottom:1px solid #333}
 #chat{flex:1;padding:16px;max-width:800px;margin:0 auto;width:100%;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.msg{padding:8px 0;white-space:pre-wrap;line-height:1.5;font-size:15px}
+.msg{padding:8px 0;white-space:pre-wrap;line-height:1.5}
 #bar{padding:12px;border-top:1px solid #333;display:flex;gap:8px;max-width:800px;margin:0 auto;width:100%}
 input{flex:1;padding:12px 14px;border-radius:20px;background:#2f2f2f;color:#fff;border:1px solid #555;outline:none}
 button{padding:10px 16px;border-radius:20px;background:#fff;color:#000;border:none;font-weight:700}
 </style>
 </head>
 <body>
-<header><b>ChatGPT Fast - 360M - Independent</b><br><small id="st">Loading fast brain (10 sec)...</small></header>
-<div id="chat"><div class="msg">Fast brain - 360M params - answers in 5 sec on any phone. Still independent, no API, no block.</div></div>
+<header><b>ChatGPT Fast - Fixed</b><br><small id="st">Loading 360M brain (10 sec)...</small></header>
+<div id="chat"><div class="msg">Fixed - SmolLM2 360M - 5 sec answers, any phone, independent, no API.</div></div>
 <div id="bar"><input id="q" placeholder="Ask..."><button onclick="send()">Send</button></div>
 <script type="module">
 import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm";
 const st=document.getElementById('st'), chatEl=document.getElementById('chat'), qEl=document.getElementById('q');
 let gen;
 async function init(){
-st.textContent="Downloading fast brain (10 sec)...";
-gen=await pipeline('text-generation','Xenova/LaMini-Flan-T5-77M',{quantized:true});
-st.textContent="✅ Ready - 5 sec answers";
+st.textContent="Downloading 360M brain...";
+gen = await pipeline('text-generation', 'Xenova/SmolLM2-360M-Instruct', { quantized: true });
+st.textContent="✅ Ready - 5 sec";
 }
 function add(t){const d=document.createElement('div');d.className='msg';d.textContent=t;chatEl.appendChild(d);chatEl.scrollTop=chatEl.scrollHeight;return d;}
 window.send=async()=>{
 const t=qEl.value.trim();if(!t)return;qEl.value='';add("You: "+t);const b=add("AI:...");
 try{
 if(!gen) await init();
-const out=await gen(t,{max_new_tokens:100});
-b.textContent="AI: "+out[0].generated_text.slice(t.length).trim();
+const prompt=`<|im_start|>user\n${t}<|im_end|>\n<|im_start|>assistant\n`;
+const out=await gen(prompt,{max_new_tokens:120, temperature:0.7, do_sample:true});
+let txt=out[0].generated_text.split("assistant\n").pop().trim();
+b.textContent="AI: "+txt;
 }catch(e){b.textContent="Error: "+e.message;}
 };
 qEl.addEventListener('keydown',e=>{if(e.key==='Enter')window.send();});
